@@ -12,8 +12,8 @@
 
 schemaVersion: 2.3.0
 metadata:
-  name: che-code
-  displayName: VS Code - Open Source - Custom Build
+  name: che-code-copilot
+  displayName: VS Code - Open Source - Copilot Build
   description: Microsoft Visual Studio Code - Open Source IDE for Eclipse Che - Insiders
     build
   tags:
