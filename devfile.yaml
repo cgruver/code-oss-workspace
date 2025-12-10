@@ -32,8 +32,6 @@ components:
       value: "/projects/home"
     - name: VSCODE_DEFAULT_WORKSPACE
       value: "/projects/code-oss-workspace/codeoss.code-workspace"
-    - name: VSCODE_MANGLE_WORKERS
-      value: "8"
 - volume:
     size: 20Gi
   name: projects

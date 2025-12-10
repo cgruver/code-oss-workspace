@@ -13,22 +13,26 @@ podman build -f build/dockerfiles/assembly.Dockerfile -t nexus.clg.lab:5002/dev-
 ```
 
 ```bash
+export ELECTRON_SKIP_BINARY_DOWNLOAD=1
+export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 cp -r code checode-compilation
-rm -rf checode-compilation/node_modules
 cd checode-compilation
+rm -rf node_modules
+git init .
+npm config set fetch-retry-mintimeout 100000 && npm config set fetch-retry-maxtimeout 600000
 npm install --force
 NODE_ARCH=$(echo "console.log(process.arch)" | node)
-NODE_VERSION=$(cat /checode-compilation/remote/.npmrc | grep target | cut -d '=' -f 2 | tr -d '"')
-mkdir -p /checode-compilation/.build/node/v${NODE_VERSION}/linux-${NODE_ARCH}
-cp /usr/bin/node /checode-compilation/.build/node/v${NODE_VERSION}/linux-${NODE_ARCH}/node
-NODE_OPTIONS="--max-old-space-size=8192" ./node_modules/.bin/gulp vscode-reh-web-linux-${NODE_ARCH}-min
-cp -r ../vscode-reh-web-linux-${NODE_ARCH} /checode
-mkdir -p /checode/ld_libs
-find /usr/lib64 -name 'libbrotli*' 2>/dev/null | xargs -I {} cp -t /checode/ld_libs {}
-find /usr/lib64 -name 'libnode.so*' -exec cp -P -t /checode/ld_libs/ {} +
-find /usr/lib64 -name 'libz.so*' -exec cp -P -t /checode/ld_libs/
-chmod a+x /checode/out/server-main.js
-chgrp -R 0 /checode && chmod -R g+rwX /checode
+NODE_VERSION=$(cat remote/.npmrc | grep target | cut -d '=' -f 2 | tr -d '"')
+mkdir -p .build/node/v${NODE_VERSION}/linux-${NODE_ARCH}
+cp /usr/local/node/bin/node .build/node/v${NODE_VERSION}/linux-${NODE_ARCH}/node
+NODE_OPTIONS="--max-old-space-size=8192 --experimental-transform-types" ./node_modules/.bin/gulp vscode-reh-web-linux-${NODE_ARCH}-min
+cp -r ../vscode-reh-web-linux-${NODE_ARCH} /projects/checode
+mkdir -p /projects/checode/ld_libs
+find /usr/lib64 -name 'libbrotli*' 2>/dev/null | xargs -I {} cp -t /projects/checode/ld_libs {}
+find /usr/lib64 -name 'libnode.so*' -exec cp -P -t /projects/checode/ld_libs/ {} +
+find /usr/lib64 -name 'libz.so*' -exec cp -P -t /projects/checode/ld_libs/
+chmod a+x /projects/checode/out/server-main.js
+chgrp -R 0 /projects/checode && chmod -R g+rwX /projects/checode
 ```
 
 
