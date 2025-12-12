@@ -10,6 +10,7 @@ oc label configmap che-code-copilot app.kubernetes.io/part-of=che.eclipse.org ap
 podman build -f build/dockerfiles/linux-libc-ubi9.Dockerfile -t linux-libc-ubi9 .
 export DOCKER_BUILDKIT=1
 podman build -f build/dockerfiles/assembly.Dockerfile -t nexus.clg.lab:5002/dev-spaces/che-code:latest .
+podman push nexus.clg.lab:5002/dev-spaces/che-code:latest
 ```
 
 ```bash
@@ -68,11 +69,3 @@ npx tsx .esbuild.ts
 vsce package
 
 ```
-
-
-Notes:
-
-workbench.action.chat.triggerSetupForceSignIn
-
-https://github.com/SoloJiang/vscode-with-copilot-config
-
