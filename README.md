@@ -28,36 +28,46 @@
 
 In my testing, I am self-hosting an OpenVSX instance following the pattern documented here - [https://github.com/cgruver/che-openvsx-registry](https://github.com/cgruver/che-openvsx-registry)
 
-```bash
-##
-## Release 0.35.X is supported by VS Code v1.107 which this rebase is built from
-##
-CHAT_REVISION="release/0.35"
-##
-TEMP_DIR="$(mktemp -d)"
-git clone -b ${CHAT_REVISION} --single-branch https://github.com/microsoft/vscode-copilot-chat ${TEMP_DIR}
-pushd ${TEMP_DIR}
-##
-## Remove the extensionPack reference from package.json to eliminate a deprecation warning and prevent the extension from attempting to install github.copilot
-##
-mv package.json tmpfile.json
-jq 'del(.extensionPack)' tmpfile.json > package.json
-rm tmpfile.json
-##
-npm install
-npx tsx .esbuild.ts
-vsce package
-##
-## Publish the extension - Note, this process may be different if you are hosting OpenVSX in another way.
-##
-export OVSX_REGISTRY_URL=https://$(oc get route open-vsx-server -n che-openvsx -o jsonpath={.spec.host})
-export OVSX_PAT=eclipse_che_token
-export NODE_TLS_REJECT_UNAUTHORIZED='0'
-ovsx create-namespace GitHub
-ovsx publish --skip-duplicate copilot-chat-*.vsix
-popd
-rm -rf ${TEMP_DIR}
-```
+1. Release 0.35.X is supported by VS Code v1.107 which this rebase is built from
+
+   ```bash
+   export CHAT_REVISION="release/0.35"
+
+1. Grab the code for the extension
+
+   ```bash
+   TEMP_DIR="$(mktemp -d)"
+   git clone -b ${CHAT_REVISION} --single-branch https://github.com/microsoft/vscode-copilot-chat ${TEMP_DIR}
+   pushd ${TEMP_DIR}
+   ```
+
+1. Remove the extensionPack reference from package.json to eliminate a deprecation warning and prevent the extension from attempting to install github.copilot
+
+   ```bash
+   mv package.json tmpfile.json
+   jq 'del(.extensionPack)' tmpfile.json > package.json
+   rm tmpfile.json
+   ```
+
+1. Build the extension
+
+   ```bash
+   npm install
+   npx tsx .esbuild.ts
+   vsce package
+   ```
+
+1. Publish the extension - Note, this process may be different if you are hosting OpenVSX in another way.
+
+   ```bash
+   export OVSX_REGISTRY_URL=https://$(oc get route open-vsx-server -n che-openvsx -o jsonpath={.spec.host})
+   export OVSX_PAT=eclipse_che_token
+   export NODE_TLS_REJECT_UNAUTHORIZED='0'
+   ovsx create-namespace GitHub
+   ovsx publish --skip-duplicate copilot-chat-*.vsix
+   popd
+   rm -rf ${TEMP_DIR}
+   ```
 
 ## Create a GitHub PAT
 
@@ -67,8 +77,14 @@ git clone https://github.com/microsoft/vscode-copilot-chat ${TEMP_DIR}
 pushd ${TEMP_DIR}
 npm install
 npm run get_token
-# Follow the instructions to generate the token
-# copy the token from the generated .env file and add it to your Dev Spaces user profile as a GitHub token
+```
+
+Follow the instructions to generate the token
+Copy the token from the generated .env file and add it to your Dev Spaces user profile as a GitHub token
+
+Clean up
+
+```bash
 pushd
 rm -rf ${TEMP_DIR}
 ```
