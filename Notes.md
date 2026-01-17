@@ -5,12 +5,17 @@ oc label configmap che-code-copilot app.kubernetes.io/part-of=che.eclipse.org ap
 ```
 
 ```bash
+git remote add upstream-code https://github.com/microsoft/vscode
+git fetch upstream-code release/1.108
+git subtree pull --prefix code upstream-code release/1.108
+```
+
+```bash
 podman build -f build/dockerfiles/clg-rebase-linux-libc-ubi9.Containerfile -t linux-libc-ubi9 .
 export DOCKER_BUILDKIT=1
 podman build -f build/dockerfiles/clg-rebase-assembly.Containerfile -t nexus.clg.lab:5002/dev-spaces/che-code:latest .
 podman push nexus.clg.lab:5002/dev-spaces/che-code:latest
 ```
-
 
 ```bash
 cat << EOF | oc apply -f -

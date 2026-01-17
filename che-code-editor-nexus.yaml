@@ -13,11 +13,11 @@
 schemaVersion: 2.3.0
 metadata:
   name: che-code-copilot
-  displayName: VS Code - Open Source - Copilot Build
-  description: Microsoft Visual Studio Code - Open Source IDE for Eclipse Che - Insiders
+  displayName: VS Code - Open Source - Experimental Copilot Build
+  description: Microsoft Visual Studio Code - Open Source IDE for Eclipse Che - Experimental Copilot Build
     build
   tags:
-    - Tech-Preview
+    - Experimental
   attributes:
     arch:
       - x86_64
@@ -26,7 +26,7 @@ metadata:
       - ppc64le
     publisher: che-incubator
     version: insiders
-    title: Microsoft Visual Studio Code - Open Source IDE for Eclipse Che - Insiders
+    title: Microsoft Visual Studio Code - Open Source IDE for Eclipse Che - Experimental Copilot Build
       build
     repository: https://github.com/che-incubator/che-code
     firstPublicationDate: '2021-10-31'
